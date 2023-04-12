@@ -33,7 +33,7 @@ const deleteTables = async (database: Client): Promise<void> => {
 };
 
 const createTables = async (database: Client) => {
-  const sql = fs.readFileSync("sql/createTables.sql").toString();
+  const sql = fs.readFileSync("./sql/createTables.sql").toString();
   await database.query(sql).catch((err: any) =>
     console.error({
       message: `Aconteceu um erro ${err.code}. Verifique se as querys de criação das tabelas em 'sql/createTables.sql' estão funcionais. E se o nome das suas tabelas, chaves e relacionamentos estão de acordo com o solicitado na descrição da entrega`,
