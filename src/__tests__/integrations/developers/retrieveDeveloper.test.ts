@@ -4,6 +4,7 @@ import app from "../../../app";
 import server from "../../../server";
 import { main } from "../../../../configTestsDatabase";
 import { developer1 } from "../../mocks/developers.mock";
+import { developerInfo1 } from "../../mocks/develiperInfo.mock";
 
 describe("GET - /developers/:id", () => {
   let serverTest: any;
@@ -27,6 +28,10 @@ describe("GET - /developers/:id", () => {
     const user = await supertest(app).post("/developers").send(developer1);
 
     const userId = user.body.id;
+
+    /*     const response1 = await supertest(app)
+      .post(`/developers/${userId}/infos`)
+      .send(developerInfo1); */
 
     const response = await supertest(app).get(`/developers/${userId}`);
 

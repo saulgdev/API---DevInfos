@@ -1,0 +1,1 @@
+SELECT * FROM developers JOIN developer_infos ON developer.id = developer_infos.developerId WHERE developer.id = 1

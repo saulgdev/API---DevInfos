@@ -21,20 +21,34 @@ const createDeveloper = async (req: Request, res: Response) => {
   return res.status(201).json(queryResult.rows[0]);
 };
 
-const getDeveloper = async (req: Request, res: Response) => {
+const getDeveloperById = async (req: Request, res: Response) => {
   const id = req.params.id;
 
-  const queryString = {
-    text: "SELECT id FROM developers WHERE email = $1 JOIN COLUMN developers_info WHERE id = $1",
+  const queryResult: QueryResult = await client.query({
+    text: "SELECT * FROM developers LEFT JOIN developer_infos ON developers.id = developer_infos.developer_id WHERE developers.id = $1",
     values: [id],
+  });
+
+  const { name, email, developerSince, preferredOS, developer_id } =
+    queryResult.rows[0];
+
+  const resposta = {
+    developerId: developer_id,
+    developerName: name,
+    developerEmail: email,
+    developerInfoDeveloperSince: developerSince,
+    developerInfoPreferredOS: preferredOS,
   };
+
+  return res.status(200).json(resposta);
 };
 
 const createDeveloperInfo = async (req: Request, res: Response) => {
   const body = req.body;
   const id = req.params.id;
+  console.log(body);
 
-  body.developerId = id;
+  body.developer_id = id;
 
   const queryString: string = format(
     `INSERT INTO
@@ -47,8 +61,9 @@ const createDeveloperInfo = async (req: Request, res: Response) => {
   );
 
   const queryResult: QueryResult = await client.query(queryString);
+  console.log(queryResult.rows[0]);
 
   return res.status(201).json(queryResult.rows[0]);
 };
 
-export { createDeveloper, createDeveloperInfo, getDeveloper };
+export { createDeveloper, createDeveloperInfo, getDeveloperById };

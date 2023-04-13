@@ -10,15 +10,6 @@ const verifyInfo = async (
   const body = req.body;
   const id = req.params.id;
 
-  const queryResult: QueryResult = await client.query({
-    text: "SELECT * FROM developers WHERE id = $1",
-    values: [id],
-  });
-
-  if (queryResult.rowCount === 0) {
-    return res.status(404).json({ message: "Developer not found." });
-  }
-
   const queryResultInfo: QueryResult = await client.query({
     text: "SELECT * FROM developer_infos WHERE id = $1",
     values: [id],
