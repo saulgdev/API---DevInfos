@@ -44,9 +44,9 @@ describe("POST - /developers/:id/infos", () => {
     expect(response.body).toHaveProperty("id");
     expect(response.body).toHaveProperty("developerSince");
     expect(response.body).toHaveProperty("preferredOS");
-    expect(response.body).toHaveProperty("developer_id");
+    expect(response.body).toHaveProperty("developerId");
 
-    expect(response.body.developer_id).toBe(userId);
+    expect(response.body.developerId).toBe(userId);
     expect(response.body.preferredOS).toBe(developerInfo1.preferredOS);
     response.pause();
   });

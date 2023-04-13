@@ -3,7 +3,9 @@ import "dotenv/config";
 import {
   createDeveloper,
   createDeveloperInfo,
+  deleteDeveloper,
   getDeveloperById,
+  updateDeveloper,
 } from "./logic";
 import { verifyEmail } from "./middleware/verifyEmail";
 import { handler } from "./error/handler";
@@ -16,8 +18,8 @@ app.use(express.json());
 
 app.post("/developers", verifyEmail, createDeveloper);
 app.get("/developers/:id", verifyUserExists, getDeveloperById);
-app.patch("/developers/:id", verifyUserExists);
-app.delete("/developers/:id", verifyUserExists);
+app.patch("/developers/:id", verifyUserExists, verifyEmail, updateDeveloper);
+app.delete("/developers/:id", verifyUserExists, deleteDeveloper);
 app.post(
   "/developers/:id/infos",
   verifyUserExists,

@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS developer_infos(
     "id" SERIAL PRIMARY KEY,
     "developerSince" DATE NOT NULL,
     "preferredOS" "OS" NOT NULL,
-    "developer_id" INTEGER NOT NULL,
-    FOREIGN KEY ("developer_id") REFERENCES developers(id)
+    "developerId" INTEGER NOT NULL,
+    FOREIGN KEY ("developerId") REFERENCES developers(id)
 );
 
 CREATE TABLE IF NOT EXISTS projects(

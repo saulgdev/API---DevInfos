@@ -25,15 +25,15 @@ const getDeveloperById = async (req: Request, res: Response) => {
   const id = req.params.id;
 
   const queryResult: QueryResult = await client.query({
-    text: "SELECT * FROM developers LEFT JOIN developer_infos ON developers.id = developer_infos.developer_id WHERE developers.id = $1",
+    text: `SELECT * FROM developers LEFT JOIN developer_infos ON developers.id = "developer_infos.developerId" WHERE developers.id = $1`,
     values: [id],
   });
 
-  const { name, email, developerSince, preferredOS, developer_id } =
+  const { name, email, developerSince, preferredOS, developerId } =
     queryResult.rows[0];
 
   const resposta = {
-    developerId: developer_id,
+    developerId: developerId,
     developerName: name,
     developerEmail: email,
     developerInfoDeveloperSince: developerSince,
@@ -46,9 +46,7 @@ const getDeveloperById = async (req: Request, res: Response) => {
 const createDeveloperInfo = async (req: Request, res: Response) => {
   const body = req.body;
   const id = req.params.id;
-  console.log(body);
-
-  body.developer_id = id;
+  body.developerId = id;
 
   const queryString: string = format(
     `INSERT INTO
@@ -61,9 +59,43 @@ const createDeveloperInfo = async (req: Request, res: Response) => {
   );
 
   const queryResult: QueryResult = await client.query(queryString);
-  console.log(queryResult.rows[0]);
-
   return res.status(201).json(queryResult.rows[0]);
 };
 
-export { createDeveloper, createDeveloperInfo, getDeveloperById };
+const updateDeveloper = async (req: Request, res: Response) => {
+  const body = req.body;
+  const id = req.params.id;
+
+  const queryString = format(
+    `UPDATE developers SET(%I) = ROW(%L) WHERE developers.id = $1 RETURNING *;`,
+    Object.keys(body),
+    Object.values(body)
+  );
+
+  const queryConfig: QueryConfig = {
+    text: queryString,
+    values: [id],
+  };
+
+  const queryResult = await client.query(queryConfig);
+
+  return res.json(queryResult.rows[0]);
+};
+
+const deleteDeveloper = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const queryResult: QueryResult = await client.query({
+    text: `DELETE FROM developers WHERE developers.id = $1`,
+    values: [id],
+  });
+
+  return res.status(204).json({});
+};
+
+export {
+  createDeveloper,
+  createDeveloperInfo,
+  getDeveloperById,
+  updateDeveloper,
+  deleteDeveloper,
+};
