@@ -23,7 +23,6 @@ const client = new Client(config());
 
 const startDatabase = async () => {
   await client.connect();
-  console.log("Database connected.");
 };
 
 export { client, startDatabase };
